@@ -84,10 +84,17 @@ func (u *UserApi) Register(ctx *gin.Context) {
 	}
 
 	id := tools.CreateID()
+
+	password, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
 	u.db.Create(&model.User{
 		ID:       id,
 		Account:  req.Account,
-		Password: req.Password,
+		Password: string(password),
 		Email:    req.Email,
 		Status:   true,
 	})
@@ -136,9 +143,54 @@ func (u *UserApi) SendVerificationCode(ctx *gin.Context) {
 }
 
 func (u *UserApi) GetUserDetails(ctx *gin.Context) {
+	id := ctx.GetString("user_id")
 
+	var user model.User
+	if err := u.db.Where("id = ?", id).First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			tools.BadRequest(ctx, errors.RecordNotFound.Error())
+			return
+		} else {
+			tools.BadRequest(ctx, errors.OtherError.Error())
+			return
+		}
+	}
+
+	tools.StatusOK(ctx, gin.H{
+		"data": user,
+	}, "获取成功")
 }
 
 func (u *UserApi) ModifyPassword(ctx *gin.Context) {
+	id := ctx.GetString("user_id")
 
+	var req model.ModifyPasswordReq
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
+	var user model.User
+	if err := u.db.Where("id = ?", id).First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			tools.BadRequest(ctx, errors.RecordNotFound.Error())
+			return
+		} else {
+			tools.BadRequest(ctx, errors.OtherError.Error())
+			return
+		}
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.OldPassword)); err != nil {
+		tools.BadRequest(ctx, "旧密码错误")
+		return
+	}
+
+	password, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+	u.db.Model(&model.User{}).Where("id = ?", id).Update("password", password)
+	tools.StatusOK(ctx, nil, "修改成功")
 }

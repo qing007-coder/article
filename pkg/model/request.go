@@ -15,3 +15,18 @@ type RegisterReq struct {
 type SendVerificationCodeReq struct {
 	Email string `json:"email"`
 }
+
+type ModifyPasswordReq struct {
+	OldPassword string
+	NewPassword string
+	RePassword  string
+}
+
+type UploadArticleReq struct {
+	Title   string `yaml:"title"`
+	Content string `yaml:"content"`
+}
+
+type SearchReq struct {
+	Content string `json:"content"`
+}
