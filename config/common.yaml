@@ -1,0 +1,34 @@
+mysql:
+  address: "192.168.152.128"
+  port: "3306"
+  password: "123456"
+  database: "article"
+  name: "qing"
+  conf: "charset=utf8&parseTime=true&loc=Local"
+
+redis:
+  address: "192.168.152.128"
+  port: "6379"
+  db: 0
+  password: ""
+
+jwt:
+  secretKey: "qing"
+  expiry: 2
+
+elasticsearch:
+  address: "192.168.152.128:"
+
+secretKey: "qing"
+
+email:
+  username: "1457800511@qq.com"
+  password: "mpfbwsxwakbbfgdg"
+  host: "smtp.qq.com"
+  port: 587
+
+logger:
+  max_size: 1
+  max_backups: 10
+  max_age: 90
+

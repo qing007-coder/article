@@ -97,7 +97,7 @@ func (es *Elasticsearch) Update(id string, query map[string]interface{}) error {
 	return err
 }
 
-// UpdateDownloads 下载量自增
+// UpdateDownloads 自增
 func (es *Elasticsearch) UpdateDownloads(id string) error {
 	script := "ctx._source.download_total += 1"
 	_, err := es.Client.Update(es.Index, id).Script(&types.Script{

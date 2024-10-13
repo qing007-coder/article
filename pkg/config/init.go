@@ -19,12 +19,12 @@ type GlobalConfig struct {
 	Redis struct {
 		Address  string `yaml:"address"`
 		Port     string `yaml:"port"`
-		DB       string `yaml:"db"`
+		DB       int    `yaml:"db"`
 		Password string `yaml:"password"`
 	} `yaml:"redis"`
 
 	JWT struct {
-		SecretKey string `yaml:"secret_key"`
+		SecretKey string `yaml:"secretKey"`
 		Expiry    int    `yaml:"expiry"`
 	} `yaml:"jwt"`
 
@@ -32,7 +32,7 @@ type GlobalConfig struct {
 		Address string `yaml:"address"`
 	} `yaml:"elasticsearch"`
 
-	SecretKey string `yaml:"secret_key"`
+	SecretKey string `yaml:"secretKey"`
 	Logger    struct {
 		MaxSize    int `yaml:"max_size"`
 		MaxBackups int `yaml:"max_backups"`
@@ -40,9 +40,10 @@ type GlobalConfig struct {
 	} `yaml:"logger"`
 
 	Email struct {
-		Account string `yaml:"account"`
-		Secret  string `yaml:"secret"`
-		Host    string `yaml:"host"`
+		Username string `yaml:"username"`
+		Password string `yaml:"password"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
 	} `yaml:"email"`
 }
 
@@ -63,9 +64,9 @@ func (c *GlobalConfig) init() error {
 	if err := v.ReadInConfig(); err != nil {
 		_, ok := err.(viper.ConfigFileNotFoundError)
 		if ok {
+			fmt.Println(1111)
 			return errors.ConfigFileNotFound
 		} else {
-			fmt.Println("其他问题：", err)
 			return errors.OtherError
 		}
 	}
