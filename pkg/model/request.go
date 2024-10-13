@@ -12,6 +12,6 @@ type RegisterReq struct {
 	VerificationCode string `json:"verification_code" binding:"min=6,max=6"`
 }
 
-type SendVerificationCode struct {
+type SendVerificationCodeReq struct {
 	Email string `json:"email"`
 }

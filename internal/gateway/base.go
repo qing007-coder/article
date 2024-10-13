@@ -3,22 +3,28 @@ package gateway
 import (
 	"article/pkg/config"
 	"article/pkg/elasticsearch"
+	"article/pkg/email"
 	"article/pkg/redis"
+	"context"
 	"gorm.io/gorm"
 )
 
 type BaseApi struct {
-	db   *gorm.DB
-	es   *elasticsearch.Elasticsearch
-	rdb  *redis.Client
-	conf *config.GlobalConfig
+	ctx   context.Context
+	db    *gorm.DB
+	es    *elasticsearch.Elasticsearch
+	rdb   *redis.Client
+	conf  *config.GlobalConfig
+	email *email.Server
 }
 
-func NewBaseApi(db *gorm.DB, es *elasticsearch.Elasticsearch, rdb *redis.Client, conf *config.GlobalConfig) *BaseApi {
+func NewBaseApi(db *gorm.DB, es *elasticsearch.Elasticsearch, rdb *redis.Client, conf *config.GlobalConfig, email *email.Server) *BaseApi {
 	return &BaseApi{
-		db:   db,
-		es:   es,
-		rdb:  rdb,
-		conf: conf,
+		ctx:   context.Background(),
+		db:    db,
+		es:    es,
+		rdb:   rdb,
+		conf:  conf,
+		email: email,
 	}
 }
