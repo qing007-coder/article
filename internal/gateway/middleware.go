@@ -1,20 +1,21 @@
 package gateway
 
 import (
-	"article/pkg/config"
 	Logger "article/pkg/logger"
-	"article/pkg/rules"
 	"article/pkg/tools"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"net/http"
 	"strings"
 )
 
 type Middleware struct {
-	enforcer *rules.Enforcer
-	db       *gorm.DB
-	conf     *config.GlobalConfig
+	*BaseApi
+}
+
+func NewMiddleware(base *BaseApi) *Middleware {
+	return &Middleware{
+		base,
+	}
 }
 
 func (m *Middleware) Cors() gin.HandlerFunc {
@@ -69,10 +70,12 @@ func (m *Middleware) Auth(source, action string) gin.HandlerFunc {
 			return
 		}
 
-		if err := m.enforcer.Enforce(uid, source, action); err != nil {
-			tools.BadRequest(ctx, err.Error())
-			ctx.Abort()
-			return
+		if source != "" && action != "" {
+			if err := m.enforcer.Enforce(uid, source, action); err != nil {
+				tools.BadRequest(ctx, err.Error())
+				ctx.Abort()
+				return
+			}
 		}
 
 		ctx.Set("user_id", uid)
