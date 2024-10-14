@@ -1,7 +1,7 @@
 package gateway
 
 import (
-	Logger "article/pkg/logger"
+	"article/pkg/logger"
 	"article/pkg/tools"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -36,14 +36,14 @@ func (m *Middleware) Cors() gin.HandlerFunc {
 }
 
 func (m *Middleware) LoggerToFile() gin.HandlerFunc {
-	logger := Logger.LoggerInit(m.conf)
+	l := logger.LoggerInit(m.conf)
 	return func(c *gin.Context) {
 		clientIp := c.ClientIP()
 		reqMethod := c.Request.Method
 		reqURI := c.Request.RequestURI
 		statusCode := c.Writer.Status()
 
-		logger.Infof("| %s | %s | %s | %d ",
+		l.Infof("| %s | %s | %s | %d ",
 			clientIp,
 			reqMethod,
 			reqURI,
