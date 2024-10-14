@@ -55,7 +55,7 @@ func (u *UserApi) Login(ctx *gin.Context) {
 	}
 
 	tools.StatusOK(ctx, gin.H{
-		"token": "Basic" + token,
+		"token": "Basic " + token,
 	}, "登录成功")
 }
 
@@ -112,7 +112,7 @@ func (u *UserApi) Register(ctx *gin.Context) {
 	}
 
 	tools.StatusOK(ctx, gin.H{
-		"token": "Basic" + token,
+		"token": "Basic " + token,
 	}, "注册成功")
 }
 

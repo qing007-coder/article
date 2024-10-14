@@ -30,3 +30,7 @@
 {"level":"INFO","time":"2024-10-14 15:25:20","msg":"| 127.0.0.1 | GET | /article/getArticle | 200 "}
 {"level":"INFO","time":"2024-10-14 15:25:21","msg":"| 127.0.0.1 | GET | /privilege/getArticleInQueue | 200 "}
 {"level":"INFO","time":"2024-10-14 15:25:23","msg":"| 127.0.0.1 | GET | /article/getArticle | 200 "}
+{"level":"INFO","time":"2024-10-14 15:27:41","msg":"| 127.0.0.1 | POST | /api/login | 200 "}
+{"level":"INFO","time":"2024-10-14 15:27:41","msg":"| 127.0.0.1 | GET | /api/getUserInfo | 200 "}
+{"level":"INFO","time":"2024-10-14 15:27:41","msg":"| 127.0.0.1 | GET | /article/getArticle | 200 "}
+{"level":"INFO","time":"2024-10-14 15:28:07","msg":"| 127.0.0.1 | POST | /article/sendArticle | 200 "}
