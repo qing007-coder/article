@@ -3,6 +3,7 @@ package mysql
 import (
 	"article/pkg/config"
 	"article/pkg/errors"
+	"article/pkg/model"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -30,7 +31,11 @@ func NewClient(conf *config.GlobalConfig) (*gorm.DB, error) {
 		return nil, errors.DBInitFailed
 	}
 
-	if err := client.AutoMigrate(); err != nil {
+	if err := client.AutoMigrate(
+		&model.UserRole{},
+		&model.ArticleJudgeRecord{},
+		&model.User{},
+	); err != nil {
 		return nil, errors.AutoMigrateFailed
 	}
 

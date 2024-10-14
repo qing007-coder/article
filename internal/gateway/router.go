@@ -1,6 +1,9 @@
 package gateway
 
-import "github.com/gin-gonic/gin"
+import (
+	"article/pkg/constant"
+	"github.com/gin-gonic/gin"
+)
 
 type Router struct {
 	engine        *gin.Engine
@@ -50,9 +53,9 @@ func (r *Router) Run() {
 
 	privilege := r.engine.Group("privilege")
 	{
-		privilege.GET("getArticleInQueue", r.middleware.Auth("article", "judge"), r.administrator.GetArticleInQueue)
-		privilege.POST("findJudgeArticle", r.middleware.Auth("article", "judge"), r.administrator.GetJudgeArticle)
-		privilege.POST("judgeArticles", r.middleware.Auth("article", "judge"), r.administrator.JudgeArticles)
+		privilege.GET("getArticleInQueue", r.middleware.Auth(constant.ARTICLE, constant.JUDEG), r.administrator.GetArticleInQueue)
+		privilege.POST("findJudgeArticle", r.middleware.Auth(constant.ARTICLE, constant.JUDEG), r.administrator.GetJudgeArticle)
+		privilege.POST("judgeArticles", r.middleware.Auth(constant.ARTICLE, constant.JUDEG), r.administrator.JudgeArticles)
 	}
 
 	r.engine.POST("search", r.article.Search).Use(r.middleware.Auth("", ""))
