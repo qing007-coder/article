@@ -44,6 +44,6 @@ type GetJudgeArticleReq struct {
 }
 
 type JudgeArticleReq struct {
-	ArticleID string
-	Status    bool
+	ArticleID string `json:"article_id"`
+	Status    string `json:"status"`
 }

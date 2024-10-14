@@ -47,6 +47,7 @@ func (a *ArticleApi) UploadArticle(ctx *gin.Context) {
 	a.db.Create(&model.ArticleJudgeRecord{
 		ArticleID: id,
 		IsJudge:   false,
+		JudgeTime: time.Now(),
 	})
 
 	tools.StatusOK(ctx, nil, "发布成功，待审批")

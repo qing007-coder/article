@@ -20,7 +20,7 @@ func NewAdministratorApi(base *BaseApi) *AdministratorApi {
 
 func (a *AdministratorApi) GetArticleInQueue(ctx *gin.Context) {
 	var articleJudgeRecords []model.ArticleJudgeRecord
-	result := a.db.Where("flag = ?", false).Find(&articleJudgeRecords)
+	result := a.db.Where("is_judge = ?", false).Find(&articleJudgeRecords)
 	if result.Error != nil {
 		tools.BadRequest(ctx, result.Error.Error())
 		return
@@ -78,7 +78,7 @@ func (a *AdministratorApi) JudgeArticles(ctx *gin.Context) {
 	a.db.Where("article_id = ?", req.ArticleID).Updates(&model.ArticleJudgeRecord{
 		IsJudge:         true,
 		AdministratorID: ctx.GetString("user_id"),
-		Result:          req.Status,
+		Result:          req.Status == "1",
 		JudgeTime:       time.Now(),
 	})
 

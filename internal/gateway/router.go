@@ -35,7 +35,7 @@ func (r *Router) Run() error {
 		api.POST("reg", r.user.Register)
 		api.POST("login", r.user.Login)
 		api.POST("sendEmail", r.user.SendVerificationCode)
-		api.GET("getUserInfo", r.user.GetUserDetails)
+		api.GET("getUserInfo", r.middleware.Auth("", ""), r.user.GetUserDetails)
 	}
 
 	article := r.engine.Group("article").Use(r.middleware.Auth("", ""))
