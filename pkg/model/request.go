@@ -42,3 +42,8 @@ type Queue struct {
 type GetJudgeArticleReq struct {
 	ArticleId string
 }
+
+type JudgeArticleReq struct {
+	ArticleID string
+	Status    bool
+}

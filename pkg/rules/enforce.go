@@ -22,7 +22,7 @@ func (e *Enforcer) AddGroup(uid, policy string) error {
 	var count int64
 	e.db.Model(&model.UserRole{}).Where("type = ? AND v1 = ?", POLICY, policy).Count(&count)
 	if count == 0 {
-		return NOMATCHINGPOLICY
+		return NoMatchingPolicy
 	}
 
 	e.db.Create(&model.UserRole{
@@ -49,16 +49,16 @@ func (e *Enforcer) Enforce(uid, source, action string) error {
 	var role model.UserRole
 	if err := e.db.Where("type = ? AND v2 = ? AND v3 = ?", POLICY, source, action).First(&role).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return NOMATCHINGPOLICY
+			return NoMatchingPolicy
 		} else {
-			return OTHERERROR
+			return OtherError
 		}
 	}
 
 	var count int64
 	e.db.Model(&model.UserRole{}).Where("type = ? AND v1 = ? AND v2 = ?", GROUP, uid, role.V1).Count(&count)
 	if count == 0 {
-		return INSUFFICIENTPERMISSIONS
+		return InsufficientPermissions
 	}
 
 	return nil

@@ -5,6 +5,7 @@ import (
 	"article/pkg/tools"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 type AdministratorApi struct {
@@ -58,4 +59,28 @@ func (a *AdministratorApi) GetJudgeArticle(ctx *gin.Context) {
 	tools.StatusOK(ctx, gin.H{
 		"articleInfo": article,
 	}, "查找成功")
+}
+
+func (a *AdministratorApi) JudgeArticles(ctx *gin.Context) {
+	var req model.JudgeArticleReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
+	if err := a.es.Update(req.ArticleID, map[string]interface{}{
+		"status": "1",
+	}); err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
+	a.db.Where("article_id = ?", req.ArticleID).Updates(&model.ArticleJudgeRecord{
+		IsJudge:         true,
+		AdministratorID: ctx.GetString("user_id"),
+		Result:          req.Status,
+		JudgeTime:       time.Now(),
+	})
+
+	tools.StatusOK(ctx, nil, "审批成功")
 }
