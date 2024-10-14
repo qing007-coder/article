@@ -28,7 +28,7 @@ func NewRouter(base *BaseApi) *Router {
 	}
 }
 
-func (r *Router) Run() {
+func (r *Router) Run() error {
 	r.engine.Use(r.middleware.Cors(), r.middleware.LoggerToFile())
 	api := r.engine.Group("api")
 	{
@@ -59,5 +59,5 @@ func (r *Router) Run() {
 	}
 
 	r.engine.POST("search", r.article.Search).Use(r.middleware.Auth("", ""))
-	_ = r.engine.Run(":8080")
+	return r.engine.Run(":8080")
 }

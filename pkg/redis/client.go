@@ -1,7 +1,9 @@
 package redis
 
 import (
+	"article/pkg/config"
 	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"time"
 )
@@ -10,22 +12,22 @@ type Client struct {
 	Client *redis.Client
 }
 
-func NewClient() *Client {
-	rdb := &Client{}
+func NewClient(conf *config.GlobalConfig) *Client {
+	rdb := new(Client)
 
-	rdb.init()
+	rdb.init(conf)
 	return rdb
 }
 
-func (r *Client) init() {
-	r.Client = redis.NewClient(r.GetConfig())
+func (r *Client) init(conf *config.GlobalConfig) {
+	r.Client = redis.NewClient(r.GetConfig(conf))
 }
 
-func (r *Client) GetConfig() *redis.Options {
+func (r *Client) GetConfig(conf *config.GlobalConfig) *redis.Options {
 	return &redis.Options{
-		Addr:     "192.168.152.128:6379",
-		Password: "",
-		DB:       1,
+		Addr:     fmt.Sprintf("%s:%s", conf.Redis.Address, conf.Redis.Port),
+		Password: conf.Redis.Password,
+		DB:       conf.Redis.DB,
 	}
 }
 
