@@ -33,12 +33,12 @@ func getWriteSyncer(conf *config.GlobalConfig) zapcore.WriteSyncer {
 	stLogFilePath := stRootDir + stSeparator + "Logger" + stSeparator + "log" + stSeparator + time.Now().Format(time.DateOnly) + ".txt"
 	//fmt.Println(stLogFilePath)
 
-	luberjackSyncer := lumberjack.Logger{
+	lumberjackSyncer := lumberjack.Logger{
 		Filename:   stLogFilePath,
 		MaxSize:    conf.Logger.MaxSize,
 		MaxBackups: conf.Logger.MaxBackups,
 		MaxAge:     conf.Logger.MaxAge,
 		Compress:   true,
 	}
-	return zapcore.AddSync(&luberjackSyncer)
+	return zapcore.AddSync(&lumberjackSyncer)
 }
