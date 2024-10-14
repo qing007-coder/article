@@ -5,6 +5,6 @@ import (
 	"article/pkg/rules"
 )
 
-func PositionInit(enforcer rules.Enforcer) {
+func PositionInit(enforcer *rules.Enforcer) {
 	enforcer.AddPolicy(constant.ADMINISTRATOR, constant.ARTICLE, constant.JUDEG)
 }

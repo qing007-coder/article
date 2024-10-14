@@ -17,7 +17,7 @@ func CreateToken(uid string, conf *config.GlobalConfig) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString(conf.JWT.SecretKey)
+	tokenString, err := token.SignedString([]byte(conf.JWT.SecretKey))
 	if err != nil {
 		return "", err
 	}
@@ -30,7 +30,7 @@ func ParseToken(tokenString string, conf *config.GlobalConfig) (string, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return conf.JWT.SecretKey, nil
+		return []byte(conf.JWT.SecretKey), nil
 	})
 
 	if err != nil {

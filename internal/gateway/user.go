@@ -48,8 +48,14 @@ func (u *UserApi) Login(ctx *gin.Context) {
 		}
 	}
 
+	token, err := tools.CreateToken(user.ID, u.conf)
+	if err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
 	tools.StatusOK(ctx, gin.H{
-		"token": tools.CreateToken(user.ID, u.conf),
+		"token": "Basic" + token,
 	}, "登录成功")
 }
 
@@ -106,7 +112,7 @@ func (u *UserApi) Register(ctx *gin.Context) {
 	}
 
 	tools.StatusOK(ctx, gin.H{
-		"token": token,
+		"token": "Basic" + token,
 	}, "注册成功")
 }
 

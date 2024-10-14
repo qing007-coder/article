@@ -1,9 +1,9 @@
 mysql:
   address: "192.168.152.128"
   port: "3306"
-  password: "123456"
+  password: "root"
   database: "article"
-  name: "qing"
+  name: "root"
   conf: "charset=utf8&parseTime=true&loc=Local"
 
 redis:
@@ -17,7 +17,7 @@ jwt:
   expiry: 2
 
 elasticsearch:
-  address: "192.168.152.128:"
+  address: "http://192.168.152.128:9200"
 
 secretKey: "qing"
 

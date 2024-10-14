@@ -35,6 +35,16 @@ func main() {
 	emailServer := email.NewServer(conf)
 	enforcer := rules.NewEnforcer(db)
 
+	//script.PositionInit(enforcer)
+	//if err := script.CreateAdministrator(db, enforcer); err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+	//if err := script.CreateIndex(es); err != nil {
+	//	fmt.Println(err)
+	//	return
+	//}
+
 	base := gateway.NewBaseApi(db, es, rdb, conf, emailServer, enforcer)
 	r := gateway.NewRouter(base)
 	if err := r.Run(); err != nil {
