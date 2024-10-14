@@ -60,7 +60,7 @@ func (a *ArticleApi) Search(ctx *gin.Context) {
 		return
 	}
 
-	queries := []types.Query{
+	shouldQueries := []types.Query{
 		{
 			Match: map[string]types.MatchQuery{
 				"title": {
@@ -77,13 +77,16 @@ func (a *ArticleApi) Search(ctx *gin.Context) {
 				},
 			},
 		},
+	}
+
+	mustQueries := []types.Query{
 		{
 			MatchPhrase: map[string]types.MatchPhraseQuery{
 				"status": {Query: "1"},
 			},
 		},
 	}
-	data, err := a.es.Search(queries, nil, 0, 10)
+	data, err := a.es.Search(mustQueries, shouldQueries, nil, 0, 10)
 	if err != nil {
 		tools.BadRequest(ctx, err.Error())
 		return

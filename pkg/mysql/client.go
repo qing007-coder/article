@@ -18,7 +18,6 @@ func NewClient(conf *config.GlobalConfig) (*gorm.DB, error) {
 		conf.Mysql.Database,
 		conf.Mysql.Conf,
 	)
-	fmt.Println(dsn)
 	// 初始化数据库时的高级配置
 	client, err := gorm.Open(mysql.New(mysql.Config{
 		DSN: dsn,

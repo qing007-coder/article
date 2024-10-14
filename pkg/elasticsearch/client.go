@@ -59,13 +59,14 @@ func (es *Elasticsearch) GetDocumentByID(id string) ([]byte, error) {
 	return resp.Source_, err
 }
 
-func (es *Elasticsearch) Search(queries []types.Query, sort []types.SortCombinations, from, size int) (*search.Response, error) {
+func (es *Elasticsearch) Search(mustQueries []types.Query, shouldQueries []types.Query, sort []types.SortCombinations, from, size int) (*search.Response, error) {
 	return es.Client.Search().
 		Index(es.Index).
 		Request(&search.Request{
 			Query: &types.Query{
 				Bool: &types.BoolQuery{
-					Must: queries,
+					Must:   mustQueries,   // 每个都要匹配
+					Should: shouldQueries, // 有一个匹配就可以
 				},
 			},
 			Sort: sort,
