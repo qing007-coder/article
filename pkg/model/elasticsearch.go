@@ -10,5 +10,5 @@ type Article struct {
 	Like     int       `json:"like"`
 	Title    string    `json:"title"`
 	Content  string    `json:"content"`
-	Status   bool      `json:"status"`
+	Status   string    `json:"status"`
 }

@@ -30,3 +30,15 @@ type UploadArticleReq struct {
 type SearchReq struct {
 	Content string `json:"content"`
 }
+
+type GetArticleDetailsReq struct {
+	ID string `json:"id"`
+}
+
+type Queue struct {
+	ArticleId string
+}
+
+type GetJudgeArticleReq struct {
+	ArticleId string
+}

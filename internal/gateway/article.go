@@ -1,11 +1,13 @@
 package gateway
 
 import (
+	"article/pkg/errors"
 	"article/pkg/model"
 	"article/pkg/tools"
 	"encoding/json"
 	"github.com/elastic/go-elasticsearch/v8/typedapi/types"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"time"
 )
 
@@ -36,7 +38,7 @@ func (a *ArticleApi) UploadArticle(ctx *gin.Context) {
 		Like:     0,
 		Title:    req.Title,
 		Content:  req.Content,
-		Status:   true,
+		Status:   "0",
 	}, id); err != nil {
 		tools.BadRequest(ctx, err.Error())
 		return
@@ -72,6 +74,11 @@ func (a *ArticleApi) Search(ctx *gin.Context) {
 					Query:     req.Content,
 					Fuzziness: "AUTO",
 				},
+			},
+		},
+		{
+			MatchPhrase: map[string]types.MatchPhraseQuery{
+				"status": {Query: "1"},
 			},
 		},
 	}
@@ -117,4 +124,40 @@ func (a *ArticleApi) GetArticleList(ctx *gin.Context) {
 	tools.StatusOK(ctx, gin.H{
 		"data": list,
 	}, "获取成功")
+}
+
+func (a *ArticleApi) GetArticleDetails(ctx *gin.Context) {
+	var req model.GetArticleDetailsReq
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
+	data, err := a.es.GetDocumentByID(req.ID)
+	if err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
+	var article model.Article
+	if err := json.Unmarshal(data, &article); err != nil {
+		tools.BadRequest(ctx, err.Error())
+		return
+	}
+
+	var user model.User
+	if err := a.db.Where("id = ?", article.AuthorID).First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			tools.BadRequest(ctx, errors.RecordNotFound.Error())
+			return
+		} else {
+			tools.BadRequest(ctx, errors.OtherError.Error())
+			return
+		}
+	}
+
+	tools.StatusOK(ctx, gin.H{
+		"author":  user,
+		"article": article,
+	}, "查询成功")
 }
